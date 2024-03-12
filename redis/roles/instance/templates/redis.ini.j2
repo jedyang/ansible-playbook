@@ -1,0 +1,19 @@
+[program:redis-{{ redis_port }}]
+command={{ redis_home }}/{{ redis_version }}/src/redis-server {{ redis_home }}/{{ redis_version }}/conf/redis-cluster-{{ redis_port }}.conf
+priority=999
+autostart=true
+autorestart=true
+startsecs=10
+startretries=3
+exitcodes=0,2
+stopsignal=QUIT
+
+
+stopwaitsecs=1
+user=redis
+stdout_logfile={{ redis_home }}/{{ redis_version }}/logs/redis-cluster-{{ redis_port }}.log
+stdout_logfile_maxbytes=100MB
+stdout_logfile_backups=10
+stderr_logfile={{ redis_home }}/{{ redis_version }}/logs/redis-cluster-{{ redis_port }}-error.log
+stdout_logfile_maxbytes=100MB
+stdout_logfile_backups=10

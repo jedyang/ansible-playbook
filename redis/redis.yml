@@ -1,0 +1,25 @@
+---
+# 对主机配置调优内核参数
+- hosts: redis_host
+  remote_user: root
+  gather_facts: False
+  roles:
+  - kernel
+  - distribute
+  
+# 部署redis实例
+- hosts: redis_instance
+  remote_user: root
+  gather_facts: False
+  # 对同一台机器supervisord update 并发时有问题
+  serial: 1
+  roles:
+  - instance
+
+# 组建cluster集群
+- hosts: redis_cluster
+  remote_user: root
+  gather_facts: False
+
+  roles:
+  - cluster

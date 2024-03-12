@@ -1,0 +1,23 @@
+---
+# 启动一个redis实例
+- name: 复制conf文件
+  ansible.builtin.template:
+    src: '{{ redis_version }}.conf.j2'
+    dest: '{{ redis_home }}/{{ redis_version }}/conf/redis-cluster-{{ redis_port }}.conf'
+    owner: '{{ redis_user }}'
+    group: '{{ redis_group }}'
+
+- name: supervisor托管
+  ansible.builtin.template:
+    src: redis.ini.j2
+    dest: '/etc/supervisord.d/redis-{{ redis_port }}.ini'
+    owner: 'root'
+    group: 'root'
+
+- name: 启动redis实例
+  ansible.builtin.shell: 
+    cmd: "supervisorctl update"
+    
+
+
+

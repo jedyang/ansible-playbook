@@ -1,0 +1,34 @@
+- name: overcommit_memory
+  ansible.builtin.sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+    state: present
+
+- name: swappiness
+  ansible.builtin.sysctl:
+    name: vm.swappiness
+    value: '1'
+    state: present
+
+- name: 修改linux内核参数
+  ansible.builtin.shell:
+    cmd: "{{ item }}"
+  loop:
+    - echo never > /sys/kernel/mm/transparent_hugepage/enabled
+    - echo 511 > /proc/sys/net/core/somaxconn
+
+
+- name: 安装supervisor
+  ansible.builtin.yum:
+    name: '{{ item }}'
+    state: present
+  loop: 
+    - epel-release
+    - supervisor
+
+- name: 启动supervisor
+  ansible.builtin.service:
+    name: supervisord
+    state: started
+    enabled: True
+  

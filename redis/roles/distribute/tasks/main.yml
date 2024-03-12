@@ -1,0 +1,49 @@
+---
+#分发redis安装包
+- name: 创建redis用户组
+  ansible.builtin.group:
+    name: "{{ redis_group }}"
+    state: present
+
+- name: 创建redis用户
+  ansible.builtin.user:
+    name: "{{ redis_user }}"
+    group: "{{ redis_group }}"
+    password: "{{ redis_user_password | password_hash('sha512') }}"
+    update_password: on_create
+    state: present
+
+- name: 创建redis主目录
+  ansible.builtin.file:
+    path: "{{ redis_home }}"
+    state: directory
+    mode: '0755'
+    owner: '{{ redis_user }}'
+    group: '{{ redis_group }}'
+  # 另一种简略写法
+  # file: path={{ redis_home }} state=directory mode='0755' owner={{ redis_user }} group={{ redis_group }}
+
+
+- name: '复制安装包，解压安装包'
+  ansible.builtin.unarchive:
+    src: '{{ redis_version }}.tar.gz'
+    dest: '{{ redis_home }}'
+    owner: '{{ redis_user }}'
+    group: '{{ redis_group }}'
+    
+- name: 编译安装
+  shell: cd {{ redis_home }}/{{ redis_version }} && make
+
+
+
+- name: 创建data等目录
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: '{{ redis_user }}'
+    group: '{{ redis_group }}'
+  loop:
+    - '{{ redis_home }}/{{ redis_version }}/logs'
+    - '{{ redis_home }}/{{ redis_version }}/conf'
+    - '{{ redis_home }}/{{ redis_version }}/data'

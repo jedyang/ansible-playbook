@@ -1,0 +1,40 @@
+redis_host:
+  hosts:
+    10.11.12.13:
+
+redis_instance:
+  hosts:
+    instance1:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7011
+    instance2:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7012
+    instance3:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7013
+    instance4:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7014
+    instance5:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7015
+    instance6:
+      ansible_ssh_host: 10.11.12.13
+      redis_port: 7016
+  vars:
+    password: QqoLsrkGV8lq
+    maxmemory: 1000mb
+
+redis_cluster: 
+  hosts:
+    10.11.12.13:
+  vars:
+    password: QqoLsrkGV8lq
+    instance_list:
+      - "10.11.12.13:7011"
+      - "10.11.12.13:7012"
+      - "10.11.12.13:7013"
+      - "10.11.12.13:7014"
+      - "10.11.12.13:7015"
+      - "10.11.12.13:7016"

@@ -1,0 +1,10 @@
+---
+# 偶尔换版本要改
+redis_version: redis-6.2.14
+
+
+# 基本不改
+redis_user: redis
+redis_user_password: redis666
+redis_group: redis
+redis_home: /home/redis

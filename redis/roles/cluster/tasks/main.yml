@@ -1,0 +1,24 @@
+---
+- name: 复制sh文件
+  ansible.builtin.template:
+    src: redis-cluster-cli.sh.j2
+    dest: '{{ redis_home }}/redis-cluster-cli.sh'
+    owner: '{{ redis_user }}'
+    group: '{{ redis_group }}'
+
+- name: 修改sh文件权限
+  file:
+    path: '{{ redis_home }}/redis-cluster-cli.sh'
+    mode: 755
+
+- name: 执行sh文件
+  shell: '{{ redis_home }}/redis-cluster-cli.sh'
+  register: redis_result
+
+- name: debug下结果
+  debug: 
+    var: redis_result
+
+- name: 检查redis-cli命令是否成功执行
+  assert:
+    that: redis_result.rc == 0
