@@ -1,0 +1,42 @@
+---
+- hosts: node
+  remote_user: root
+  gather_facts: False
+  tasks:
+    - name: kernel config
+      lineinfile:
+        path: /etc/sysctl.conf
+        regexp: "^{{ item.split('=')[0] }}"
+        line: "{{ item }}"
+        state: present
+      loop:
+        - 'fs.file-max = 655350'
+        - 'kernel.pid_max = 655350'
+    
+    - name: kernel config2
+      lineinfile:
+        path: /etc/security/limits.conf
+        line: "{{ item }}"
+        state: present
+      loop:
+        - 'root soft nofile 655350'
+        - 'root hard nofile 655350'
+
+    - name: install socat
+      yum:
+        name: socat
+        state: present
+
+    - name: nfs
+      yum:
+        name: nfs-utils
+        state: present
+
+    - name: start nfs
+      systemd:
+        name: nfs
+        state: started
+        enabled: yes
+
+    - name: nfs status
+      shell: systemctl status nfs
